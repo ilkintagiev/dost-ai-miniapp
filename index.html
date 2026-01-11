@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DOST AI - Услуги</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Главная страница -->
+    <div id="home-page" class="page active">
+        <div class="hero">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+                <h1>DOST AI</h1>
+            </div>
+            <p class="tagline">Разработка, автоматизация и AI-решения</p>
+            <div class="author-info">
+                <p class="author-name">Илькин Тагиев</p>
+                <p class="author-role">AI-продюсер</p>
+            </div>
+            <button class="cta-button" onclick="showServices()">
+                Посмотреть услуги
+                <span class="arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Страница услуг -->
+    <div id="services-page" class="page">
+        <div class="page-header">
+            <button class="back-button" onclick="showHome()">← Назад</button>
+        </div>
+
+        <!-- About Services Section -->
+        <div class="about-section">
+            <h2>О наших услугах</h2>
+            <p class="about-description">
+                Мы специализируемся на автоматизации бизнес-процессов, разработке AI-решений и создании
+                Telegram-приложений.
+                Наш опыт позволяет внедрять современные технологии, которые повышают эффективность вашего бизнеса и
+                открывают новые возможности для роста. От автоматизации рутинных задач до создания интеллектуальных
+                систем — мы поможем вам оптимизировать процессы и вывести бизнес на новый уровень.
+            </p>
+        </div>
+
+        <div class="services-container">
+            <!-- Telegram & Автоматизация -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">📱</span>
+                    <h3>Telegram & Автоматизация</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Telegram Mini Apps')">
+                        <div class="card-icon">🚀</div>
+                        <h4>Telegram Mini Apps</h4>
+                        <p>Разработка мини-приложений внутри Telegram</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('Монетизация ботов')">
+                        <div class="card-icon">💰</div>
+                        <h4>Монетизация ботов</h4>
+                        <p>Подключение платежей к вашим ботам</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Соцсети & Контент -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">📸</span>
+                    <h3>Соцсети & Контент</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Автопостинг')">
+                        <div class="card-icon">📤</div>
+                        <h4>Автопостинг</h4>
+                        <p>Telegram, Instagram, TikTok</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('Ведение Threads')">
+                        <div class="card-icon">🧵</div>
+                        <h4>Ведение Threads</h4>
+                        <p>Автоматическая активность в Threads</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('Контент-завод')">
+                        <div class="card-icon">🏭</div>
+                        <h4>Контент-завод</h4>
+                        <p>Потоковое создание контента</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI-решения -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">🤖</span>
+                    <h3>AI-решения</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('AI Influencer')">
+                        <div class="card-icon">👤</div>
+                        <h4>AI Influencer / Модель</h4>
+                        <p>Создание цифровой модели для контента</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('Авто-ответы WB')">
+                        <div class="card-icon">💬</div>
+                        <h4>Авто-ответы на Wildberries</h4>
+                        <p>Обработка жалоб и отзывов на WB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Дополнительные услуги -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">🎓</span>
+                    <h3>Дополнительно</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Обучение')">
+                        <div class="card-icon">📚</div>
+                        <h4>Обучение инструментам</h4>
+                        <p>Работа с AI и автоматизацией</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('Помощь с подписками')">
+                        <div class="card-icon">🌍</div>
+                        <h4>Помощь с подписками</h4>
+                        <p>Покупка зарубежных сервисов</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Маркетинг и продвижение -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">📢</span>
+                    <h3>Маркетинг и продвижение</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Реклама через блогеров')">
+                        <div class="card-icon">🎯</div>
+                        <h4>Реклама через блогеров</h4>
+                        <p>Продвижение бренда и сайтов</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('СМС-рассылки')">
+                        <div class="card-icon">📱</div>
+                        <h4>СМС-рассылки</h4>
+                        <p>Массовые рассылки для клиентов</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Анимация и персонажи -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">🎬</span>
+                    <h3>Анимация и персонажи</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Создание мультперсонажей')">
+                        <div class="card-icon">🎨</div>
+                        <h4>Создание мультперсонажей</h4>
+                        <p>Разработка анимированных персонажей</p>
+                    </div>
+                    <div class="service-card" onclick="selectService('Анимация контента')">
+                        <div class="card-icon">✨</div>
+                        <h4>Анимация контента</h4>
+                        <p>Анимирование изображений и видео</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Управление диалогами -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">💬</span>
+                    <h3>Управление диалогами</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Ведение диалогов')">
+                        <div class="card-icon">🗨️</div>
+                        <h4>Ведение диалогов</h4>
+                        <p>Avito, Telegram, WhatsApp</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Саммари и встречи -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">📝</span>
+                    <h3>Саммари и встречи</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Саммари Zoom встреч')">
+                        <div class="card-icon">🎥</div>
+                        <h4>Саммари Zoom встреч</h4>
+                        <p>Выжимка и конспект встреч</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Веб-разработка -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">🌐</span>
+                    <h3>Веб-разработка</h3>
+                </div>
+                <div class="service-cards">
+                    <div class="service-card" onclick="selectService('Создание сайтов')">
+                        <div class="card-icon">💻</div>
+                        <h4>Создание сайтов</h4>
+                        <p>Разработка веб-сайтов под ключ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="pricing-section">
+            <div class="pricing-card">
+                <h3>💵 Стоимость</h3>
+                <div class="price-item">
+                    <span class="price-label">Боты</span>
+                    <span class="price-value">от 5 000 ₽</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">Остальные услуги</span>
+                    <span class="price-value">Обсуждаются</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Button Section -->
+        <div class="contact-cta-section">
+            <button class="contact-button primary" onclick="showContact()">
+                <span class="telegram-icon">✈️</span>
+                Связаться со мной
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Страница контакта -->
+    <div id="contact-page" class="page">
+        <div class="page-header">
+            <button class="back-button" onclick="showServices()">← Назад</button>
+            <h2>Связаться</h2>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="contact-avatar">
+                    <div class="avatar-circle">ИТ</div>
+                </div>
+                <h3>Илькин Тагиев</h3>
+                <p class="contact-role">AI-продюсер компании DOST AI</p>
+
+                <a href="https://t.me/boss_dostai" class="telegram-link" target="_blank">
+                    <span class="tg-icon">✈️</span>
+                    @boss_dostai
+                </a>
+            </div>
+
+            <div class="contact-form">
+                <h4>Опишите вашу задачу</h4>
+                <div class="form-group">
+                    <label>Интересующая услуга</label>
+                    <select id="service-select">
+                        <option value="">Выберите услугу</option>
+                        <option value="Telegram Mini Apps">Telegram Mini Apps</option>
+                        <option value="Монетизация ботов">Монетизация ботов</option>
+                        <option value="Автоматизация чатов">Автоматизация чатов</option>
+                        <option value="Автопостинг">Автопостинг (Telegram, Instagram, TikTok)</option>
+                        <option value="Ведение Threads">Автоматическое ведение Threads</option>
+                        <option value="Контент-завод">Контент-завод</option>
+                        <option value="AI Influencer">AI Influencer / Модель</option>
+                        <option value="Авто-ответы WB">Авто-ответы на Wildberries</option>
+                        <option value="Обучение">Обучение инструментам</option>
+                        <option value="Помощь с подписками">Помощь с подписками</option>
+                        <option value="Реклама через блогеров">Реклама через блогеров</option>
+                        <option value="СМС-рассылки">СМС-рассылки</option>
+                        <option value="Создание мультперсонажей">Создание мультперсонажей</option>
+                        <option value="Анимация контента">Анимация контента</option>
+                        <option value="Ведение диалогов">Ведение диалогов (Avito, Telegram, WhatsApp)</option>
+                        <option value="Саммари Zoom встреч">Саммари Zoom встреч</option>
+                        <option value="Создание сайтов">Создание сайтов</option>
+                        <option value="Другое">Другое</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Описание задачи</label>
+                    <textarea id="task-description" rows="5"
+                        placeholder="Расскажите подробнее о вашей задаче..."></textarea>
+                </div>
+                <button class="submit-button" onclick="sendMessage()">
+                    Отправить сообщение
+                    <span class="send-icon">📨</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
