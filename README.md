@@ -81,7 +81,7 @@ python3 -m http.server 8000
 
 **Илькин Тагиев**  
 AI-продюсер компании DOST AI  
-Telegram: [@boss_dostai](https://t.me/boss_dostai)
+Telegram: [@dostai_grup](https://t.me/dostai_grup)
 
 ## 📄 Лицензия
 
