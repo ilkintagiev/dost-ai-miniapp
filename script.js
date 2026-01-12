@@ -93,7 +93,7 @@ function sendMessage() {
     const message = `🔔 Новая заявка!\n\n📋 Услуга: ${service}\n\n💬 Описание:\n${description}`;
 
     // Открываем чат с ботом или пользователем
-    const telegramUrl = `https://t.me/boss_dostai?text=${encodeURIComponent(message)}`;
+    const telegramUrl = `https://t.me/dostai_grup?text=${encodeURIComponent(message)}`;
 
     // Haptic feedback
     if (tg.HapticFeedback) {
