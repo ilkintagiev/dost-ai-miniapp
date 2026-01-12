@@ -231,7 +231,7 @@ netlify deploy --prod
 ## 📞 Нужна помощь?
 
 Если возникли проблемы с деплоем, напишите мне:
-**[@boss_dostai](https://t.me/boss_dostai)**
+**[@dostai_grup](https://t.me/dostai_grup)**
 
 ---
 
