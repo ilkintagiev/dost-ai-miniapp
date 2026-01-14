@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOST AI - Админ панель</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Admin-specific styles */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-normal);
+            white-space: nowrap;
+        }
+
+        .admin-tab.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .admin-tab:hover:not(.active) {
+            border-color: var(--color-primary);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .stat-card-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Product Form */
+        .product-form {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--bg-primary);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            transition: all var(--transition-normal);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .image-upload {
+            border: 2px dashed var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .image-upload:hover {
+            border-color: var(--color-primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .image-upload input {
+            display: none;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 16px auto;
+            border-radius: var(--radius-md);
+        }
+
+        /* Products Table */
+        .products-table {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-primary);
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        td {
+            padding: 16px;
+            border-top: 1px solid var(--bg-primary);
+        }
+
+        tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .product-image-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-edit {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Orders Table */
+        .order-status-select {
+            padding: 6px 12px;
+            border: 2px solid var(--bg-primary);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .order-status-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid var(--bg-primary);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--transition-normal);
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <a href="index.html" class="back-button">← Вернуться в магазин</a>
+            <h1>⚙️ Админ панель</h1>
+            <p style="color: var(--text-secondary);">Управление товарами и заказами</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchAdminTab('dashboard')">📊 Дашборд</button>
+            <button class="admin-tab" onclick="switchAdminTab('products')">📦 Товары</button>
+            <button class="admin-tab" onclick="switchAdminTab('orders')">🛒 Заказы</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="admin-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon">📦</div>
+                    <div class="stat-card-value" id="total-products-stat">0</div>
+                    <div class="stat-card-label">Всего товаров</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">🛒</div>
+                    <div class="stat-card-value" id="total-orders-stat">0</div>
+                    <div class="stat-card-label">Всего заказов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">💰</div>
+                    <div class="stat-card-value" id="total-revenue-stat">0 ₽</div>
+                    <div class="stat-card-label">Общая выручка</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">⏳</div>
+                    <div class="stat-card-value" id="pending-orders-stat">0</div>
+                    <div class="stat-card-label">Ожидают обработки</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 16px;">Последние заказы</h3>
+            <div id="recent-orders-list"></div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="products-section" class="admin-section">
+            <!-- Add Product Form -->
+            <div class="product-form">
+                <h3 style="margin-bottom: 20px;">Добавить новый товар</h3>
+                <form id="add-product-form" onsubmit="handleAddProduct(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Название *</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Категория *</label>
+                            <select name="category" required>
+                                <option value="phones">Телефоны</option>
+                                <option value="glasses">Умные очки</option>
+                                <option value="devices">AI устройства</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <textarea name="description"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Цена (₽) *</label>
+                            <input type="number" name="price" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Количество на складе</label>
+                            <input type="number" name="stock" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Изображение товара</label>
+                        <div class="image-upload" onclick="document.getElementById('product-image').click()">
+                            <input type="file" id="product-image" name="image" accept="image/*"
+                                onchange="previewImage(event)">
+                            <div id="upload-text">
+                                <p style="font-size: 32px; margin-bottom: 8px;">📸</p>
+                                <p>Нажмите для загрузки изображения</p>
+                            </div>
+                            <img id="image-preview" class="image-preview" style="display: none;">
+                        </div>
+                    </div>
+                    <button type="submit" class="cta-button" style="width: 100%;">
+                        Добавить товар
+                        <span class="arrow">→</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Products List -->
+            <h3 style="margin-bottom: 16px;">Список товаров</h3>
+            <div class="products-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Фото</th>
+                            <th>Название</th>
+                            <th>Категория</th>
+                            <th>Цена</th>
+                            <th>Склад</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div id="orders-section" class="admin-section">
+            <h3 style="margin-bottom: 16px;">Все заказы</h3>
+            <div class="products-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Клиент</th>
+                            <th>Товары</th>
+                            <th>Сумма</th>
+                            <th>Статус</th>
+                            <th>Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="supabase.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
