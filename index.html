@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DOST AI - Услуги</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -17,9 +19,18 @@
                 <div class="logo-icon">🤖</div>
                 <h1>DOST AI</h1>
             </div>
-            <p class="tagline">Разработка, автоматизация и AI-решения</p>
-            <button class="cta-button" onclick="showServices()">
+            <p class="tagline">Разработка, AI-инструменты и товары</p>
+            <p
+                style="font-size: 14px; color: var(--text-secondary); margin-bottom: 30px; max-width: 400px; text-align: center;">
+                У нас вы можете заказать разработку, автоматизацию и AI-решения, а также купить физические товары
+            </p>
+            <button class="cta-button" onclick="switchTab('services')">
                 Посмотреть услуги
+                <span class="arrow">→</span>
+            </button>
+            <button class="cta-button" onclick="switchTab('products')"
+                style="margin-top: 15px; background: var(--accent-secondary);">
+                Посмотреть товары
                 <span class="arrow">→</span>
             </button>
         </div>
@@ -301,6 +312,139 @@
         </div>
     </div>
 
+    <!-- Страница товаров -->
+    <div id="products-page" class="page">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="product-search" placeholder="Поиск товаров..."
+                    oninput="searchProducts(this.value)">
+                <button class="clear-search" id="clear-search" onclick="clearSearch()">✕</button>
+            </div>
+        </div>
+
+        <div class="services-container">
+            <!-- Телефоны -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">📱</span>
+                    <h3>Телефоны</h3>
+                </div>
+                <div class="service-cards" id="phones-grid"></div>
+            </div>
+
+            <!-- Очки -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">👓</span>
+                    <h3>Умные очки</h3>
+                </div>
+                <div class="service-cards" id="glasses-grid"></div>
+            </div>
+
+            <!-- AI устройства -->
+            <div class="service-category">
+                <div class="category-header">
+                    <span class="category-icon">🤖</span>
+                    <h3>AI устройства</h3>
+                </div>
+                <div class="service-cards" id="devices-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница корзины -->
+    <div id="cart-page" class="page">
+        <div class="page-header">
+            <h2>Корзина</h2>
+        </div>
+
+        <div class="cart-container">
+            <div id="cart-items"></div>
+            <div id="cart-total-section" style="display: none;">
+                <div class="cart-total">
+                    <div class="total-row">
+                        <span>Итого:</span>
+                        <span id="cart-total-price">0 ₽</span>
+                    </div>
+                    <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница профиля -->
+    <div id="profile-page" class="page">
+        <!-- User Profile Card -->
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="avatar-icon">👤</div>
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name" id="user-name">Загрузка...</h2>
+                    <p class="profile-username" id="user-username">@username</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-orders">0</div>
+                    <div class="stat-label">Заказов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-spent">0 ₽</div>
+                    <div class="stat-label">Потрачено</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="cart-items-count">0</div>
+                    <div class="stat-label">В корзине</div>
+                </div>
+            </div>
+
+            <!-- Order History -->
+            <div class="section-header">
+                <h3>📦 История заказов</h3>
+            </div>
+
+            <div id="orders-list" class="orders-list">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <p>Пока нет заказов</p>
+                    <button class="cta-button" onclick="switchTab('products')" style="margin-top: 16px;">
+                        Посмотреть товары
+                        <span class="arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-page="services" onclick="switchTab('services')">
+            <span class="nav-icon">🛠️</span>
+            <span class="nav-label">Услуги</span>
+        </button>
+        <button class="nav-item" data-page="products" onclick="switchTab('products')">
+            <span class="nav-icon">🛍️</span>
+            <span class="nav-label">Товары</span>
+        </button>
+        <button class="nav-item" data-page="cart" onclick="switchTab('cart')">
+            <span class="nav-icon">🛒</span>
+            <span class="nav-label">Корзина</span>
+            <span class="cart-badge" id="cart-badge">0</span>
+        </button>
+        <button class="nav-item" data-page="profile" onclick="switchTab('profile')">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Профиль</span>
+        </button>
+    </nav>
+
+    <script src="supabase.js"></script>
+    <script src="products.js"></script>
     <script src="script.js"></script>
 </body>
 
